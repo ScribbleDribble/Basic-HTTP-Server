@@ -3,13 +3,13 @@
 
 # $ telnet google.com 80    # address and port number
 # $ GET / HTTP/1.0 # specify the http method, path and protocol and we can get googles home page.
-# that was all we needed to get google's home page
 
 # the first line of the header defines the resource we want to retrieve
 
 import socket
 import os
 import threading
+import logging
 
 
 class HTTPServer:
@@ -27,6 +27,9 @@ class HTTPServer:
 
         self.accepted_versions = {"HTTP/1.1", "HTTP/1.0"}
 
+        logging.basicConfig(level=logging.INFO, filename="logs.txt", filemode="w", format='%(asctime)s - %(message)s - %(levelname)s',
+                            datefmt='%d-%b-%y %H:%M:%S')
+
         self.read_html_files()
         self.run()
 
@@ -36,7 +39,7 @@ class HTTPServer:
             with open(os.getcwd()+ "/pages/" + html_page, "r") as f:
                 text = f.read()
                 resource_name = f"/{html_page.split('.')[0]}"
-                self.page_contents[resource_name] = text
+                self.page_contents[resource_name] = text + "\n"
 
     def is_valid_version(self, client_version: str) -> bool:
 
@@ -53,6 +56,7 @@ class HTTPServer:
 
         message = message.split(" ")
         if len(message) < 3:
+            logging.info(f"505 from {addr}")
             return self.status_codes["400"]
 
         # parse header data
@@ -61,6 +65,7 @@ class HTTPServer:
         client_version = message[2]
 
         if not self.is_valid_version(client_version):
+            logging.info(f"505 OK for {requested_resource} from {addr}")
             return self.get_status_code("505")
 
         # if we have received a GET request, we must find out the resource they want.
@@ -72,13 +77,14 @@ class HTTPServer:
 
             response += self.get_status_code("200")
             response += self.page_contents[requested_resource]
-            print(f"200 OK for GET {requested_resource} from {addr}")
+            logging.info(f"200 OK for GET {requested_resource} from {addr}")
             return response
 
         elif method == "POST":
             return "not implemented yet"
 
         else:
+            logging.info(f"404 for {requested_resource} from {addr}")
             return self.get_status_code("404")
 
     def get_status_code(self, status_code: str):
@@ -86,7 +92,6 @@ class HTTPServer:
             raise ValueError(f"Status code {status_code} not a valid HTTP code or not yet implemented.")
 
         return self.status_codes[status_code]
-
 
     def accept_connection(self, conn, addr):
         with conn:

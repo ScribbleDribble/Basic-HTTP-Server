@@ -1,0 +1,1 @@
+25-Nov-21 16:18:10 - 200 OK for GET /index from ('127.0.0.1', 56132) - INFO
