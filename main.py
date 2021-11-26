@@ -30,15 +30,18 @@ class HTTPServer:
         logging.basicConfig(level=logging.INFO, filename="logs.txt", filemode="a",
                             format='%(asctime)s - %(message)s - %(levelname)s', datefmt='%d-%b-%y %H:%M:%S')
 
-        self.read_html_files()
+        self.cache_pages()
         self.run()
 
-    def read_html_files(self):
+    def cache_pages(self):
 
         for html_page in os.listdir(os.getcwd()+"/pages"):
             with open(os.getcwd()+ "/pages/" + html_page, "r") as f:
                 text = f.read()
                 resource_name = f"/{html_page.split('.')[0]}"
+                if resource_name == "/index":
+                    self.page_contents['/'] = text + "\n"
+
                 self.page_contents[resource_name] = text + "\n"
 
     def is_valid_version(self, client_version: str) -> bool:
@@ -52,8 +55,49 @@ class HTTPServer:
             return False
         return True
 
+    def parse_GET(self, requested_resource: str, addr: str) -> str:
+
+        response = ""
+        # we may or may not have parameters in the url. consider both cases
+        page = requested_resource.split("?")[0] if len(requested_resource.split("?")[0]) > 0 else requested_resource
+
+        if page not in self.page_contents:
+            return self.get_status_code("404")
+
+        response += self.get_status_code("200")
+        response += "\n" + self.page_contents[page]
+        logging.info(f"200 OK for GET {page} from {addr}")
+        return response
+
+    def parse_POST(self, message: str, requested_resource: str, addr: str) -> str:
+
+        response = ""
+
+        message_body = message.split("\n")[-1]
+        fields = message_body.split("&")
+
+        # easy access based on form-id set from HTML code
+        # k: form-id v: submitted data
+        form_table = {}
+        for field in fields:
+            form_id = field.split("=")[0]
+            client_data = field.split("=")[1]
+            form_table[form_id] = client_data
+
+        for k in form_table:
+            print(form_table[k])
+
+        form_data = message_body.split("=")[-1]
+
+        response += self.get_status_code("201")
+        # redirect the user back to the page they were on
+        response += "\n" + self.page_contents[requested_resource]
+        logging.info(f"{self.get_status_code('201')} in {requested_resource} for {addr}")
+
+        return response
+
     def handle_request(self, message: str, addr: str) -> str:
-        print(message)
+
         starting_line = message.split(" ")
         if len(starting_line) < 3:
             logging.info(f"400 from {addr} - starting line {starting_line}")
@@ -68,26 +112,11 @@ class HTTPServer:
             logging.info(f"505 OK for {requested_resource} from {addr}. Client HTTP version: {client_version}")
             return self.get_status_code("505")
 
-        # if we have received a GET request, we must find out the resource they want.
-        # dont forget to prepend the HTML status code and version of the protocol.
-        response = ""
         if method == "GET":
-            page = requested_resource.split("?")[0] if len(requested_resource.split("?")[0]) > 0 else requested_resource
-            if page not in self.page_contents:
-                return self.get_status_code("404")
-
-            response += self.get_status_code("200")
-            response += "\n" + self.page_contents[page]
-            logging.info(f"200 OK for GET {page} from {addr}")
-            return response
+            return self.parse_GET(requested_resource, addr)
 
         elif method == "POST":
-
-            message_body = message.split("\n")[-1]
-            form_data = message_body.split("=")[-1]
-            print(form_data)
-            response += self.get_status_code("201")
-            return response
+            return self.parse_POST(message, requested_resource, addr)
 
         else:
             logging.info(f"404 for {requested_resource} from {addr}")
