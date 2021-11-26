@@ -1,1 +1,28 @@
-25-Nov-21 16:18:10 - 200 OK for GET /index from ('127.0.0.1', 56132) - INFO
+25-Nov-21 23:36:08 - 505 OK for /index from ('127.0.0.1', 43582) - INFO
+25-Nov-21 23:37:29 - 505 OK for /index from ('127.0.0.1', 58224) - INFO
+25-Nov-21 23:38:53 - 505 OK for /index from ('127.0.0.1', 58226). Client HTTP version: HTTP/1.1
+Host: - INFO
+25-Nov-21 23:39:48 - 505 OK for /index from ('127.0.0.1', 43596). Client HTTP version: HTTP/1.1
+Host: (15 chars - INFO
+25-Nov-21 23:41:46 - 505 OK for /index from ('127.0.0.1', 43604). Client HTTP version: HTTP/1.1
+Host: (15 chars - INFO
+26-Nov-21 00:15:26 - 200 OK for GET /index from ('127.0.0.1', 43658) - INFO
+26-Nov-21 00:15:37 - 200 OK for GET /index from ('127.0.0.1', 43662) - INFO
+26-Nov-21 00:15:45 - 200 OK for GET /index from ('127.0.0.1', 43664) - INFO
+26-Nov-21 00:18:36 - 200 OK for GET /index from ('127.0.0.1', 44994) - INFO
+26-Nov-21 00:19:19 - 200 OK for GET /index from ('127.0.0.1', 45052) - INFO
+26-Nov-21 00:19:43 - 200 OK for GET /index from ('127.0.0.1', 45074) - INFO
+26-Nov-21 00:24:51 - 505 OK for /index from ('127.0.0.1', 45130). Client HTTP version: HTTP/1.1\n - INFO
+26-Nov-21 00:30:59 - 404 for \index from ('127.0.0.1', 45146) - INFO
+26-Nov-21 00:32:33 - 200 OK for GET /index from ('127.0.0.1', 45150) - INFO
+26-Nov-21 00:40:46 - 505 OK for /index from ('127.0.0.1', 45206). Client HTTP version: HTTP/1.1^jcolor=blue
+ - INFO
+26-Nov-21 00:57:02 - 200 OK for GET /you from ('127.0.0.1', 45308) - INFO
+26-Nov-21 00:58:21 - 200 OK for GET /you from ('127.0.0.1', 59954) - INFO
+26-Nov-21 01:04:30 - 200 OK for GET /you from ('127.0.0.1', 59976) - INFO
+26-Nov-21 01:04:32 - 200 OK for GET /you from ('127.0.0.1', 59978) - INFO
+26-Nov-21 01:04:48 - 200 OK for GET /you from ('127.0.0.1', 59980) - INFO
+26-Nov-21 01:04:54 - 200 OK for GET /you from ('127.0.0.1', 59982) - INFO
+26-Nov-21 01:06:42 - 200 OK for GET /you from ('127.0.0.1', 59986) - INFO
+26-Nov-21 01:09:39 - 200 OK for GET /you from ('127.0.0.1', 59992) - INFO
+26-Nov-21 01:10:29 - 200 OK for GET /you from ('127.0.0.1', 45368) - INFO
